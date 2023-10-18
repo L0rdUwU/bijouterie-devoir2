@@ -1,0 +1,38 @@
+<?php
+
+namespace App\DataFixtures;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
+use App\Entity\Categorie;
+use App\Entity\Bijou;
+use App\Entity\Location;
+use App\Entity\Client;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+
+class BijouFixtures extends Fixture implements DependentFixtureInterface
+{
+private $faker;
+
+           public function __construct(){
+                $this->faker = Factory::create("fr_FR");
+           }
+
+
+    public function load(ObjectManager $manager): void
+    {
+        for($i=0;$i<10;$i++){
+            $bijou = new Categorie();
+            $bijou->setDescription($this->faker->paragraph());
+            $bijou->setPrixVente($this->faker->randomFloat());
+            $bijou->setPrixLocation($this->faker->randomFloat());
+            $manager->persist($bijou);
+        }
+        $manager->flush();
+    }
+
+    public function getDependencies(){
+        return [CategorieFixtures::class];
+    }
+}
